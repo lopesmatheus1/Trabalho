@@ -59,34 +59,33 @@ pontosEntrega = [
 
 
 
-# Função para calcular a latência considerando tempo de percurso
+
 def calcularLatencia(ponto1, ponto2):
     
     distancia = np.linalg.norm(np.array(ponto1["coordenadas"]) - np.array(ponto2["coordenadas"]))
     tempo = distancia / velocidade_media
     return tempo
 
-# Função para calcular a latência total de uma rota
+
 def calcularLatenciaTotal(rota, pontos_entrega):
     latenciaTotal = 0
     for i in range(len(rota) - 1):
         latenciaTotal += calcularLatencia(pontos_entrega[rota[i]], pontos_entrega[rota[i + 1]])
     return latenciaTotal
 
-# Função para gerar uma solução inicial aleatória
+
 def gerarSolucao1(n):
     solucaoInicial = list(range(n))
     random.shuffle(solucaoInicial)
     return solucaoInicial
 
-# Função para realizar uma perturbação na solução trocando dois pontos aleatórios
+
 def perturbacao(solucao):
     solucao_perturbada = solucao.copy()
     i, j = random.sample(range(len(solucao)), 2)
     solucao_perturbada[i], solucao_perturbada[j] = solucao_perturbada[j], solucao_perturbada[i]
     return solucao_perturbada
 
-# Função para realizar a busca local usando Variable Neighborhood Descent (VND)
 def vnd(solucao, pontos_entrega):
     melhor_solucao_local = solucao.copy()
     melhor_latencia_local = calcularLatenciaTotal(solucao, pontos_entrega)
@@ -102,10 +101,10 @@ def vnd(solucao, pontos_entrega):
 
     return melhor_solucao_local
 
-# Função principal para VNS-VND
+
 def vns_vnd(n_iteracoes, k_max, pontosEntrega):
     melhor_solucao_global = gerarSolucao1(len(pontosEntrega))
-    # Loop principal do algoritmo VNS
+    
     for i in range(n_iteracoes):
         k = 1
         while k <= k_max:
@@ -121,26 +120,24 @@ def vns_vnd(n_iteracoes, k_max, pontosEntrega):
 
     return melhor_solucao_global
 
-# Registra o tempo de início
+
 start_time = time.time()
 
-# Seu código principal aqui
+
 n_iteracoes = 52
 k_max = 10
 velocidade_media = 30
 
 melhor_rota = vns_vnd(n_iteracoes, k_max, pontosEntrega)
 
-# Registra o tempo de término
+
 end_time = time.time()
 
-# Calcula o tempo total decorrido
+
 total_elapsed_time = end_time - start_time
 
-# Imprime o tempo total decorrido em segundos
-print("Tempo total de execução:", total_elapsed_time, "segundos")
 
-# Restante do seu código, como a impressão da melhor rota e latência
+print("Tempo total de execução:", total_elapsed_time, "segundos")
 print("Melhor Rota:", [pontosEntrega[i]["id"] for i in melhor_rota])
 print("Latência da Melhor Rota:", calcularLatenciaTotal(melhor_rota, pontosEntrega))
 
